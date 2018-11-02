@@ -1,0 +1,13 @@
+Before building the installer add the data folders to each package
+One way to set it up is to have an install folder where LongQt-model,
+and PyLongQt have already copied their install files copied to a directory
+I use ~/install/<name>.
+To set them up for the installer to build create links (soft links in linux/
+osx, junctions in windows)
+packages/LongQtmodel/data -> ~/install/LongQt-model
+packages/PyLongQt/data -> ~/install/PyLongQt
+
+To setup LongQt create ~/install/LongQt(/bin on windows)
+and copy the executables there (.exe windows, .app osx)
+
+Then modify the build scripts to point to your qt installation and run it
