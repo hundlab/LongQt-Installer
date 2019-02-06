@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<Package>
+    <DisplayName>{name}</DisplayName>
+    <Description>{description}</Description>
+    <Version>{version}</Version>
+    <ReleaseDate>{release_date}</ReleaseDate>
+    <Licenses>
+        <License name="{license_name}" file="{license_file}" />
+    </Licenses>
+    <Default>{default}</Default>
+    <ForcedInstallation>false</ForcedInstallation>
+    <Essential>false</Essential>
+    <Script>installscript.js</Script>
+</Package>

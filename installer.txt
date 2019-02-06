@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Installer>
     <Name>LongQt Suite</Name>
-    <Version>0.2</Version>
+    <Version>{version}</Version>
     <Title>LongQt Tools</Title>
     <Publisher>Hund Lab BME OSU</Publisher>
     <ProductUrl>http://www.hundlab.org</ProductUrl>
