@@ -44,11 +44,7 @@ class PackageConfig:
         copyfile(src_root+'/LICENSE',dest)
     def copyDataFiles(self, build_root=None):
         if build_root is None:
-            build_root = self.build_location
-            if sys.platform.startswith(('linux','win')):
-                build_root += '/bin/'
-            elif sys.platform.startswith('darwin'):
-                build_root += '/bundle/'
+            build_root = self.build_location+'/bin/'
         dest = self.location+'/data/'
         copytree(build_root, dest, dirs_exist_ok=True)
 
