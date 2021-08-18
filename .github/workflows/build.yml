@@ -62,14 +62,17 @@ jobs:
 
       - name: Install dependencies on windows
         if: startsWith(matrix.config.os, 'windows')
+        shell: bash
         run: |
           ${{ matrix.config.python }} -m pip install aqtinstall
           ${{ matrix.config.python }} -m aqt tool \
             windows tools_ifw 4.1.1-202105261130 qt.tools.ifw.41
-          cp -r ./bin/* ./packages/LongQt
+          cp -r ./bin/* ./packages/LongQt/
+
  
       - name: Install dependencies on macos
         if: startsWith(matrix.config.os, 'macos')
+        shell: bash
         run: |
           ${{ matrix.config.python }} -m pip install aqtinstall
           ${{ matrix.config.python }} -m aqt tool \
