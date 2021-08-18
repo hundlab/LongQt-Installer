@@ -42,14 +42,14 @@ class PackageConfig:
             src_root = self.build_location+'/share/info/'
         dest = self.location+'/'+self.meta+'/'+self.opts['license_file']
         copyfile(src_root+'/LICENSE',dest)
-    def copyBuiltFiles(self, build_root=None):
+    def copyDataFiles(self, build_root=None):
         if build_root is None:
             build_root = self.build_location
             if sys.platform.startswith(('linux','win')):
                 build_root += '/bin/'
             elif sys.platform.startswith('darwin'):
                 build_root += '/bundle/'
-        dest = self.location+'/'
+        dest = self.location+'/data/'
         copytree(build_root, dest, dirs_exist_ok=True)
 
 
@@ -66,7 +66,7 @@ longqtConf = PackageConfig('package', './packages/LongQt', 'meta', args.LQRoot, 
  'default': 'true' })
 longqtConf.writeConf()
 longqtConf.copyLicenseFile()
-longqtConf.copyBuiltFiles()
+longqtConf.copyDataFiles()
 
 #if __name__ == '__main__':
 #    print('Files writen and copied successfully')

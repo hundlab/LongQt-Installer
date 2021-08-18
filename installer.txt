@@ -3,7 +3,8 @@
     <Name>LongQt Suite</Name>
     <Version>{version}</Version>
     <Title>LongQt Tools</Title>
-    <Publisher>Hund Lab BME OSU</Publisher>
+    <Publisher>Hund Lab OSU</Publisher>
+    <StartMenuDir>LongQt</StartMenuDir>
     <ProductUrl>http://www.hundlab.org</ProductUrl>
     <ControlScript>controlscript.js</ControlScript>
 </Installer>
