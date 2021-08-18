@@ -18,9 +18,10 @@ parser.add_argument('--LQRoot', type=str)
 args = parser.parse_args()
 
 class PackageConfig:
-    def __init__(self, ty, destination, build_location, opts):
+    def __init__(self, ty, destination, meta, build_location, opts):
         self.ty = ty
         self.location = destination
+        self.meta = meta
         self.build_location = build_location
         self.opts = opts
     def writeConf(self):
@@ -34,13 +35,13 @@ class PackageConfig:
             name = 'config.xml'
         else:
             print('type unknown: ',self.ty)
-        with open(self.location+'/'+name, 'w') as configFile:
+        with open(self.location+'/'+self.meta+'/'+name, 'w') as configFile:
             configFile.write(conf)
     def copyLicenseFile(self, src_root=None):
         if src_root is None:
             src_root = self.build_location+'/share/info/'
-        dest = self.location+'/'+self.opts['license_file']
-        copyfile(srcRoot+'/LICENSE',dest)
+        dest = self.location+'/'+self.meta+'/'+self.opts['license_file']
+        copyfile(src_root+'/LICENSE',dest)
     def copyBuiltFiles(self, build_root=None):
         if build_root is None:
             build_root = self.build_location
@@ -52,10 +53,10 @@ class PackageConfig:
         copytree(build_root, dest, dirs_exist_ok=True)
 
 
-installerConf = PackageConfig('installer', './config', opts = {'version':args.version})
+installerConf = PackageConfig('installer', './config', '', '', opts = {'version':args.version})
 installerConf.writeConf()
 
-longqtConf = PackageConfig('package', './packages/LongQt/meta', args.LQRoot, opts = {
+longqtConf = PackageConfig('package', './packages/LongQt', 'meta', args.LQRoot, opts = {
  'name': 'LongQt',
  'description': 'LongQt Gui Tools',
  'version': args.version,
@@ -64,7 +65,7 @@ longqtConf = PackageConfig('package', './packages/LongQt/meta', args.LQRoot, opt
  'license_file': 'LICENSE-LongQt',
  'default': 'true' })
 longqtConf.writeConf()
-longqtConf.copyLicense()
+longqtConf.copyLicenseFile()
 longqtConf.copyBuiltFiles()
 
 #if __name__ == '__main__':
