@@ -1,3 +1,7 @@
+# LongQt Installer Creator
+
+## Usage
+
 Before building the installer add the data folders to each package
 One way to set it up is to have an install folder where LongQt-model,
 and PyLongQt have already copied their install files copied to a directory

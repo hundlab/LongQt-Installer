@@ -1,0 +1,95 @@
+# This is a basic workflow to help you get started with Actions
+name: Build LongQt-Installer
+
+# Controls when the action will run. Manually triggered
+on: workflow_dispatch
+
+env:
+  CMAKE_INSTALL_PREFIX: ~/install
+  longqt_version: 0.4
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs: 
+# This workflow contains a single job called "build"
+  build: 
+# The type of runner that the job will run on
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }} 
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {
+              name: "Windows Latest MSVC",
+              os: windows-latest,
+              build_type: "Release",
+              environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
+              qt5_path: "./Tools/QtInstallerFramework/4.1/bin",
+              python: py,
+              longqt-repo: ./LongQt
+            }
+          - {
+              name: "macOS Latest Clang",
+              os: macos-latest,
+              build_type: "Release",
+              qt5_path: "./Tools/QtInstallerFramework/4.1/bin",
+              python: python3,
+              longqt-repo: ./LongQt
+            }
+    
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Checkout LongQt
+        uses: actions/checkout@v2
+        with:
+          repository: hundlab/LongQt
+          path: LongQt
+
+      - name: Download LongQt
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          github_token: ${{secrets.ACC_LONGQT_MODEL}}
+          workflow: build.yml
+          name: LongQt-${{ runner.os }}
+          repo: hundlab/LongQt
+
+      - name: Get current date
+        uses: 1466587594/get-current-time@v2
+        id: current-date
+        with:
+          format: YYYY-MM-DD
+
+      - name: Install dependencies on windows
+        if: startsWith(matrix.config.os, 'windows')
+        run: |
+          ${{ matrix.config.python } -m pip install aqtinstall
+          ${{ matrix.config.python } -m aqt tool \
+            windows tools_ifw 4.1.1-202105261130 qt.tools.ifw.41
+          cp -r ./bin/* ./packages/LongQt
+ 
+      - name: Install dependencies on macos
+        if: startsWith(matrix.config.os, 'macos')
+        run: |
+          ${{ matrix.config.python } -m pip install aqtinstall
+          ${{ matrix.config.python } -m aqt tool \
+            mac tools_ifw  4.1.1-202105261130 qt.tools.ifw.41
+          cp -r ./*.app ./packages/LongQt
+
+      - name: Build Installer
+        shell: bash
+        run: |
+          ${{ matrix.config.python } create_conf_files.py \
+            --version ${{ env.longqt_version}} \
+            --releaseDate ${{ steps.current-date.outputs.formattedTime }} \
+            --LQRoot ${{ matrix.config.longqt-repo }}
+          ${{ qt5_path }}/binarycreator -c ./config/config.xml \
+            -p ./packages/ \
+            LongQtInstaller
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: LongQt-Installer-${{ runner.os }}
+          path: ./LongQtInstaller*
+
