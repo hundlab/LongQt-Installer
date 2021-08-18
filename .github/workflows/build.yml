@@ -79,7 +79,7 @@ jobs:
       - name: Build Installer
         shell: bash
         run: |
-          ${{ matrix.config.python } create_conf_files.py \
+          ${{ matrix.config.python }} create_conf_files.py \
             --version ${{ env.longqt_version }} \
             --releaseDate ${{ steps.current-date.outputs.formattedTime }} \
             --LQRoot ${{ matrix.config.longqt-repo }}
