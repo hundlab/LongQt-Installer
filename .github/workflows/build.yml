@@ -22,6 +22,7 @@ jobs:
           - {
               name: "Windows Latest MSVC",
               os: windows-latest,
+              aqt-os-name: "windows",
               build_type: "Release",
               environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
               qt5_path: "./Tools/QtInstallerFramework/4.1/bin",
@@ -31,6 +32,7 @@ jobs:
           - {
               name: "macOS Latest Clang",
               os: macos-latest,
+              aqt-os-name: "mac",
               build_type: "Release",
               qt5_path: "./Tools/QtInstallerFramework/4.1/bin",
               python: python3,
@@ -60,13 +62,17 @@ jobs:
         with:
           format: YYYY-MM-DD
 
-      - name: Install dependencies on windows
-        if: startsWith(matrix.config.os, 'windows')
+      - name: Install dependencies
         shell: bash
         run: |
           ${{ matrix.config.python }} -m pip install aqtinstall
           ${{ matrix.config.python }} -m aqt tool \
-            windows tools_ifw 4.1.1-202105261130 qt.tools.ifw.41
+            ${{ matrix.config.aqt-os-name }} tools_ifw 4.1.1-202105261130 qt.tools.ifw.41
+
+      - name: Install dependencies on windows
+        if: startsWith(matrix.config.os, 'windows')
+        shell: bash
+        run: |
           cp -r ./bin/* ./packages/LongQt/
 
  
@@ -74,10 +80,7 @@ jobs:
         if: startsWith(matrix.config.os, 'macos')
         shell: bash
         run: |
-          ${{ matrix.config.python }} -m pip install aqtinstall
-          ${{ matrix.config.python }} -m aqt tool \
-            mac tools_ifw  4.1.1-202105261130 qt.tools.ifw.41
-          cp -r ./*.app ./packages/LongQt
+          cp -r ./bundle/* ./packages/LongQt
 
       - name: Build Installer
         shell: bash
