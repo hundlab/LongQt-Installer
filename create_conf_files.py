@@ -10,6 +10,10 @@ from shutil import copyfile, copytree
 import argparse
 import sys
 
+MIN_PYTHON = (3, 8)
+if sys.version_info < MIN_PYTHON:
+    sys.exit("Python %s.%s or later is required.\n" % MIN_PYTHON)
+
 parser = argparse.ArgumentParser(description='Produce xml config files for Qt Installer Creator')
 parser.add_argument('--version', type=str)
 parser.add_argument('--releaseDate', type=str)
