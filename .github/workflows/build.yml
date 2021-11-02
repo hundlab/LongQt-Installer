@@ -9,12 +9,12 @@ env:
   longqt_version: 0.4
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs: 
+jobs:
 # This workflow contains a single job called "build"
-  build: 
+  build:
 # The type of runner that the job will run on
     name: ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }} 
+    runs-on: ${{ matrix.config.os }}
     strategy:
       fail-fast: false
       matrix:
@@ -26,8 +26,7 @@ jobs:
               build_type: "Release",
               environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
               qt5_path: "./Tools/QtInstallerFramework/4.1/bin",
-              python: py,
-              longqt-path: . 
+              longqt-path: .
             }
           - {
               name: "macOS Latest Clang",
@@ -35,18 +34,11 @@ jobs:
               aqt-os-name: "mac",
               build_type: "Release",
               qt5_path: "./Tools/QtInstallerFramework/4.1/bin",
-              python: python3,
               longqt-path: .
             }
-    
+
     steps:
       - uses: actions/checkout@v2
-
-        #      - name: Checkout LongQt
-        #        uses: actions/checkout@v2
-        #        with:
-        #          repository: hundlab/LongQt
-        #          path: LongQt
 
       - name: Download LongQt
         uses: dawidd6/action-download-artifact@v2
@@ -55,6 +47,11 @@ jobs:
           workflow: build.yml
           name: LongQt-${{ runner.os }}
           repo: hundlab/LongQt
+
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
 
       - name: Get current date
         uses: 1466587594/get-current-time@v2
@@ -65,14 +62,14 @@ jobs:
       - name: Install dependencies
         shell: bash
         run: |
-          ${{ matrix.config.python }} -m pip install aqtinstall
-          ${{ matrix.config.python }} -m aqt tool \
-            ${{ matrix.config.aqt-os-name }} tools_ifw 4.1.1-202105261130 qt.tools.ifw.41
+          python -m pip install aqtinstall
+          python -m aqt install-tool \
+            ${{ matrix.config.aqt-os-name }} desktop tools_ifw qt.tools.ifw.41
 
       - name: Build Installer
         shell: bash
         run: |
-          ${{ matrix.config.python }} create_conf_files.py \
+          python create_conf_files.py \
             --version ${{ env.longqt_version }} \
             --releaseDate ${{ steps.current-date.outputs.formattedTime }} \
             --LQRoot ${{ matrix.config.longqt-path }}
