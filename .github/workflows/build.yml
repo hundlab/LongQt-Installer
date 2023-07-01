@@ -25,7 +25,7 @@ jobs:
               aqt-os-name: "windows",
               build_type: "Release",
               environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
-              qt5_path: "./Tools/QtInstallerFramework/4.1/bin",
+              qt5_path: "./Tools/QtInstallerFramework/4.6/bin",
               longqt-path: .
             }
           - {
@@ -33,7 +33,7 @@ jobs:
               os: macos-latest,
               aqt-os-name: "mac",
               build_type: "Release",
-              qt5_path: "./Tools/QtInstallerFramework/4.1/bin",
+              qt5_path: "./Tools/QtInstallerFramework/4.6/bin",
               longqt-path: .
             }
 
